@@ -51,17 +51,17 @@ public class PruebaPaP2AmApplication implements CommandLineRunner {
 		this.iPropietarioService.insertarNuevo(p1.getNombre(), p1.getApellido(), p1.getCedula());
 
 		// 2. Crear un vehiculo
-		System.out.println("\n1. Crear un vehiculo: ");
+		System.out.println("\n2. Crear un vehiculo: ");
 		this.iVehiculoService.insertar(v1);
 
 		// 3. Actualizar un atributo de vehiculo
-		System.out.println("\n1. Actualizar un vehiculo: ");
+		System.out.println("\n3. Actualizar un vehiculo: ");
 		v1.setModelo("Q3");
 		v1.setPrecio(new BigDecimal(15000));
 		this.iVehiculoService.actualizar(v1);
 
 		// 4. Realizar una matricula
-		System.out.println("\n1. Realizar una matricula: ");
+		System.out.println("\n4. Realizar una matricula: ");
 		Matricula m = this.iMatriculaService.matricularVehiculo(p1.getCedula(), v1.getPlaca());
 		
 		
