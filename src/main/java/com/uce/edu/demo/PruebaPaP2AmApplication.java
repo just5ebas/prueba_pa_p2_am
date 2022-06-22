@@ -1,30 +1,30 @@
 package com.uce.edu.demo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.uce.edu.demo.modelo.Matricula;
-import com.uce.edu.demo.modelo.Propietario;
-import com.uce.edu.demo.modelo.Vehiculo;
-import com.uce.edu.demo.service.IMatriculaService;
-import com.uce.edu.demo.service.IPropietarioService;
-import com.uce.edu.demo.service.IVehiculoService;
+import com.uce.edu.demo.correccion.modelo.Propietario;
+import com.uce.edu.demo.correccion.modelo.Vehiculo;
+import com.uce.edu.demo.correccion.service.IMatriculaGestorService;
+import com.uce.edu.demo.correccion.service.IPropietarioService;
+import com.uce.edu.demo.correccion.service.IVehiculoService;
 
 @SpringBootApplication
 public class PruebaPaP2AmApplication implements CommandLineRunner {
 
 	@Autowired
-	private IPropietarioService iPropietarioService;
-
-	@Autowired
 	private IVehiculoService iVehiculoService;
 
 	@Autowired
-	private IMatriculaService iMatriculaService;
+	private IPropietarioService iPropietarioService;
+
+	@Autowired
+	private IMatriculaGestorService iMatriculaGestorService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(PruebaPaP2AmApplication.class, args);
@@ -34,37 +34,32 @@ public class PruebaPaP2AmApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		// TODO Auto-generated method stub
 
-		Propietario p1 = new Propietario();
-		p1.setNombre("Ariel");
-		p1.setApellido("Maldonado");
-		p1.setCedula("1750844787");
+		// 1. crear vehiculo
+		Vehiculo v = new Vehiculo();
+		v.setMarca("Totota");
+		v.setPlaca("PCJ-6064");
+		v.setPrecio(new BigDecimal(50000));
+		v.setTipo("P");
 
-		Vehiculo v1 = new Vehiculo();
-		v1.setMarca("Audi");
-		v1.setModelo("R8");
-		v1.setPlaca("PCJ-6064");
-		v1.setPrecio(new BigDecimal(2500));
-		v1.setTipo("Ligero");
+		this.iVehiculoService.insertar(v);
 
-		// 1. Crear un propietario
-		System.out.println("\n1. Crear un propietario: ");
-		this.iPropietarioService.insertarNuevo(p1.getNombre(), p1.getApellido(), p1.getCedula());
+		// 2. Actualizar vehiculo
+		v.setPrecio(new BigDecimal(4000));
+		v.setMarca("Toyota");
 
-		// 2. Crear un vehiculo
-		System.out.println("\n2. Crear un vehiculo: ");
-		this.iVehiculoService.insertar(v1);
+		this.iVehiculoService.actualizar(v);
 
-		// 3. Actualizar un atributo de vehiculo
-		System.out.println("\n3. Actualizar un vehiculo: ");
-		v1.setModelo("Q3");
-		v1.setPrecio(new BigDecimal(15000));
-		this.iVehiculoService.actualizar(v1);
+		// 3. Crear propietario
+		Propietario p = new Propietario();
+		p.setNombre("Ariel");
+		p.setApellido("Maldonado");
+		p.setCedula("1750844787");
+		p.setFechaNacimiento(LocalDateTime.of(2000, 12, 26, 0, 5));
 
-		// 4. Realizar una matricula
-		System.out.println("\n4. Realizar una matricula: ");
-		Matricula m = this.iMatriculaService.matricularVehiculo(p1.getCedula(), v1.getPlaca());
-		
-		
+		this.iPropietarioService.crear(p);
+
+		// 4. Crear matricula
+		this.iMatriculaGestorService.generar(p.getCedula(), v.getPlaca());
 
 	}
 
